@@ -22,14 +22,19 @@ public class ExampleFrame extends JFrame {
 	private static final long serialVersionUID = -778615248202221558L;
 	
 	private boolean initialized = false;
-	private JMenu counterMenu = new JMenu();
-	private int counter = 0;
+	private JMenu actionCounterMenu = new JMenu();
+	private int actionCounter = 0;
+	private JMenu listenerCounterMenu = new JMenu();
+	private int listenerCounter = 0;
 	private String title;
 	
 	private Action checkboxAction = new AbstractAction(CHECK_IT) {
+		
+		private static final long serialVersionUID = 737633186243567717L;
+
 		@Override public void actionPerformed(ActionEvent e) {
-			counter++;
-			updateCounterMenuText();
+			actionCounter++;
+			updateActionCounterMenuText();
 		}
 	};
 	private ButtonModel checkboxModel;
@@ -73,21 +78,23 @@ public class ExampleFrame extends JFrame {
 	}
 	
 	private JMenuBar getAndInitMenuBar() {
-		updateCounterMenuText();
+		updateActionCounterMenuText();
 		JMenuBar menuBar = new JMenuBar();
 		JMenu file = new JMenu("File");
 		checkBoxMenuItem = new JCheckBoxMenuItem(checkboxAction);
 		
 		checkBoxMenuItem.addActionListener(new ActionListener() {
 			@Override public void actionPerformed(ActionEvent e) {
+				listenerCounter++;
+				updateListenterCounterMenuText();
 				updateTitle();
 			}
 		});
 		
 		checkboxModel = checkBoxMenuItem.getModel();
+		
 		file.add(checkBoxMenuItem);
 		menuBar.add(file);
-		menuBar.add(counterMenu);
 		
 		JMenu buttonActions = new JMenu("Button actions");
 		final JCheckBoxMenuItem actionEnabled = new JCheckBoxMenuItem("Action enabled");
@@ -110,11 +117,19 @@ public class ExampleFrame extends JFrame {
 		
 		menuBar.add(buttonActions);
 		
+		menuBar.add(actionCounterMenu);
+		menuBar.add(listenerCounterMenu);
+		updateListenterCounterMenuText();
+		
 		return menuBar;
 	}
 	
-	private void updateCounterMenuText() {
-		counterMenu.setText("Checking counter: " + counter);
+	private void updateActionCounterMenuText() {
+		actionCounterMenu.setText("Action Checking counter: " + actionCounter);
+	}
+	
+	private void updateListenterCounterMenuText() {
+		listenerCounterMenu.setText("Listener Checking counter: " + listenerCounter);
 	}
 	
 	private static abstract class CheckerInternalFrame extends JInternalFrame {
