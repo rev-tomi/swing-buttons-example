@@ -19,13 +19,12 @@ import javax.swing.event.InternalFrameEvent;
 public class ExampleFrame extends JFrame {
 
 	private static final String CHECK_IT = "Check it";
-
 	private static final long serialVersionUID = -778615248202221558L;
 	
 	private boolean initialized = false;
-	
 	private JMenu counterMenu = new JMenu();
 	private int counter = 0;
+	private String title;
 	
 	private Action checkboxAction = new AbstractAction(CHECK_IT) {
 		@Override public void actionPerformed(ActionEvent e) {
@@ -34,6 +33,7 @@ public class ExampleFrame extends JFrame {
 		}
 	};
 	private ButtonModel checkboxModel;
+	private JCheckBoxMenuItem checkBoxMenuItem;
 	
 	public ExampleFrame() {
 		// NoP. Call init() to initialize the GUI
@@ -43,7 +43,7 @@ public class ExampleFrame extends JFrame {
 		if (initialized) {
 			throw new IllegalStateException("The frame is already initialized");
 		}
-		setTitle("Container frame");
+		title = "Container frame";
 		setSize(800, 600);
 		JDesktopPane desktop = new JDesktopPane();
 		setContentPane(desktop);
@@ -61,6 +61,8 @@ public class ExampleFrame extends JFrame {
 		desktop.add(differentModelChecker);
 		differentModelChecker.setLocation(160, 240);
 		
+		updateTitle();
+		
 		initialized = true;
 	}
 	
@@ -72,13 +74,26 @@ public class ExampleFrame extends JFrame {
 		return checkboxModel;
 	}
 	
+	private void updateTitle() {
+		ButtonModel model = checkBoxMenuItem.getModel();
+		String actualTitle = title + " - " + (model.isSelected() ? "Checked" : "Unchecked");
+		setTitle(actualTitle);
+	}
+	
 	private JMenuBar getAndInitMenuBar() {
 		updateCounterMenuText();
 		JMenuBar menuBar = new JMenuBar();
 		JMenu file = new JMenu("File");
-		JCheckBoxMenuItem checkIt = new JCheckBoxMenuItem(checkboxAction);
-		checkboxModel = checkIt.getModel();
-		file.add(checkIt);
+		checkBoxMenuItem = new JCheckBoxMenuItem(checkboxAction);
+		
+		checkBoxMenuItem.addActionListener(new ActionListener() {
+			@Override public void actionPerformed(ActionEvent e) {
+				updateTitle();
+			}
+		});
+		
+		checkboxModel = checkBoxMenuItem.getModel();
+		file.add(checkBoxMenuItem);
 		menuBar.add(file);
 		menuBar.add(counterMenu);
 		return menuBar;
