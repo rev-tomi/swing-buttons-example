@@ -44,22 +44,22 @@ public class ExampleFrame extends JFrame {
 			throw new IllegalStateException("The frame is already initialized");
 		}
 		setTitle("Container frame");
-		setSize(640, 480);
+		setSize(800, 600);
 		JDesktopPane desktop = new JDesktopPane();
 		setContentPane(desktop);
 		setJMenuBar(getAndInitMenuBar());
 		
 		JInternalFrame doubleChecker = new DoubleCheckerInternalFrame(checkboxModel, checkboxAction, CHECK_IT);
 		desktop.add(doubleChecker);
-		doubleChecker.setLocation(5, 5);
+		doubleChecker.setLocation(0, 0);
 		
 		JInternalFrame singleChecker = new SingleCheckerInternalFrame(checkboxModel, CHECK_IT);
 		desktop.add(singleChecker);
-		singleChecker.setLocation(50, 50);
+		singleChecker.setLocation(320, 0);
 		
 		JInternalFrame differentModelChecker = new DifferentModelInternalFrame(checkboxAction);
 		desktop.add(differentModelChecker);
-		differentModelChecker.setLocation(100, 100);
+		differentModelChecker.setLocation(160, 240);
 		
 		initialized = true;
 	}
@@ -100,7 +100,7 @@ public class ExampleFrame extends JFrame {
 		public CheckerInternalFrame(String title) {
 			super(title, true, true, true, true);
 			this.title = title;
-			setSize(320, 320);
+			setSize(320, 240);
 			setVisible(true);
 		}
 		
