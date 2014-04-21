@@ -66,14 +66,6 @@ public class ExampleFrame extends JFrame {
 		initialized = true;
 	}
 	
-	public Action getCheckBoxAction() {
-		return checkboxAction;
-	}
-	
-	public ButtonModel getCheckBoxModel() {
-		return checkboxModel;
-	}
-	
 	private void updateTitle() {
 		ButtonModel model = checkBoxMenuItem.getModel();
 		String actualTitle = title + " - " + (model.isSelected() ? "Checked" : "Unchecked");
@@ -96,6 +88,28 @@ public class ExampleFrame extends JFrame {
 		file.add(checkBoxMenuItem);
 		menuBar.add(file);
 		menuBar.add(counterMenu);
+		
+		JMenu buttonActions = new JMenu("Button actions");
+		final JCheckBoxMenuItem actionEnabled = new JCheckBoxMenuItem("Action enabled");
+		actionEnabled.setSelected(true);
+		actionEnabled.addActionListener(new ActionListener() {
+			@Override public void actionPerformed(ActionEvent e) {
+				checkboxAction.setEnabled(actionEnabled.isSelected());
+			}
+		});
+		buttonActions.add(actionEnabled);
+		
+		final JCheckBoxMenuItem modelEnabled = new JCheckBoxMenuItem("Model enabled");
+		modelEnabled.setSelected(true);
+		modelEnabled.addActionListener(new ActionListener() {
+			@Override public void actionPerformed(ActionEvent e) {
+				checkboxModel.setEnabled(modelEnabled.isSelected());
+			}
+		});
+		buttonActions.add(modelEnabled);
+		
+		menuBar.add(buttonActions);
+		
 		return menuBar;
 	}
 	
