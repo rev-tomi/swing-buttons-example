@@ -8,6 +8,7 @@ import javax.swing.ButtonModel;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
+import javax.swing.JInternalFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 
@@ -32,10 +33,14 @@ public class ExampleFrame extends JFrame {
 			throw new IllegalStateException("The frame is already initialized");
 		}
 		setTitle("A frame to contain the app");
+		setSize(640, 480);
 		JDesktopPane desktop = new JDesktopPane();
 		setContentPane(desktop);
-		setSize(640, 480);
 		setJMenuBar(getAndInitMenuBar());
+		
+		JInternalFrame internal = new CheckerInternalFrame(checkboxModel, checkboxAction, "Check it");
+		internal.setLocation(5, 5);
+		desktop.add(internal);
 		initialized = true;
 	}
 	
@@ -56,5 +61,29 @@ public class ExampleFrame extends JFrame {
 		menuBar.add(file);
 		return menuBar;
 	}
+	
+	private static class CheckerInternalFrame extends JInternalFrame {
+		
+		private static final long serialVersionUID = 7764296274182376110L;
+
+		public CheckerInternalFrame(ButtonModel model, Action action, String checkItText) {
+			super("Internal", true, true, true, true);
+			setSize(320, 320);
+			setVisible(true);
+			
+			JCheckBoxMenuItem checkIt = new JCheckBoxMenuItem(checkItText);
+			checkIt.setAction(action);
+			checkIt.setModel(model);
+			
+			JMenuBar menuBar = new JMenuBar();
+			JMenu menu = new JMenu("File");
+			menu.add(checkIt);
+			menuBar.add(menu);
+			
+			setJMenuBar(menuBar);
+		}
+	}
+	
+	
 	
 }
