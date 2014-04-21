@@ -13,6 +13,8 @@ import javax.swing.JInternalFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JToggleButton.ToggleButtonModel;
+import javax.swing.event.InternalFrameAdapter;
+import javax.swing.event.InternalFrameEvent;
 
 public class ExampleFrame extends JFrame {
 
@@ -41,7 +43,7 @@ public class ExampleFrame extends JFrame {
 		if (initialized) {
 			throw new IllegalStateException("The frame is already initialized");
 		}
-		setTitle("A frame to contain the app");
+		setTitle("Container frame");
 		setSize(640, 480);
 		JDesktopPane desktop = new JDesktopPane();
 		setContentPane(desktop);
@@ -93,6 +95,8 @@ public class ExampleFrame extends JFrame {
 		private JCheckBoxMenuItem checker;
 		private String title;
 		
+		private boolean initialized;
+		
 		public CheckerInternalFrame(String title) {
 			super(title, true, true, true, true);
 			this.title = title;
@@ -101,6 +105,9 @@ public class ExampleFrame extends JFrame {
 		}
 		
 		protected final void init(JCheckBoxMenuItem checker) {
+			if (initialized) {
+				throw new IllegalStateException("Internal frame already initialized");
+			}
 			this.checker = checker;
 			checker.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
@@ -109,6 +116,18 @@ public class ExampleFrame extends JFrame {
 			});
 			initMenuBar();
 			updateTitle();
+			
+			addInternalFrameListener(new InternalFrameAdapter() {
+				public void internalFrameClosed(InternalFrameEvent e) {
+					JCheckBoxMenuItem checker = CheckerInternalFrame.this.checker;
+					if (checker != null) {
+						checker.setAction(null);
+						checker.setModel(null);
+					}
+				}
+			});
+			
+			initialized = true;
 		}
 		
 		private void initMenuBar() {
