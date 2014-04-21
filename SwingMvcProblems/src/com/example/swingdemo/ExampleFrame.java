@@ -14,12 +14,19 @@ import javax.swing.JMenuBar;
 
 public class ExampleFrame extends JFrame {
 
+	private static final String CHECK_IT = "Check it";
+
 	private static final long serialVersionUID = -778615248202221558L;
 	
 	private boolean initialized = false;
-	private Action checkboxAction = new AbstractAction("Check it") {
+	
+	private JMenu counterMenu = new JMenu();
+	private int counter = 0;
+	
+	private Action checkboxAction = new AbstractAction(CHECK_IT) {
 		@Override public void actionPerformed(ActionEvent e) {
-			System.out.println("--> checking");
+			counter++;
+			updateCounterMenuText();
 		}
 	};
 	private ButtonModel checkboxModel;
@@ -38,9 +45,18 @@ public class ExampleFrame extends JFrame {
 		setContentPane(desktop);
 		setJMenuBar(getAndInitMenuBar());
 		
-		JInternalFrame internal = new CheckerInternalFrame(checkboxModel, checkboxAction, "Check it");
-		internal.setLocation(5, 5);
-		desktop.add(internal);
+		JInternalFrame doubleChecker = new DoubleCheckerInternalFrame(checkboxModel, checkboxAction, CHECK_IT);
+		desktop.add(doubleChecker);
+		doubleChecker.setLocation(5, 5);
+		
+		JInternalFrame singleChecker = new SingleCheckerInternalFrame(checkboxModel, CHECK_IT);
+		desktop.add(singleChecker);
+		singleChecker.setLocation(50, 50);
+		
+		JInternalFrame differentModelChecker = new DifferentModelInternalFrame(checkboxAction);
+		desktop.add(differentModelChecker);
+		differentModelChecker.setLocation(100, 100);
+		
 		initialized = true;
 	}
 	
@@ -53,21 +69,27 @@ public class ExampleFrame extends JFrame {
 	}
 	
 	private JMenuBar getAndInitMenuBar() {
+		updateCounterMenuText();
 		JMenuBar menuBar = new JMenuBar();
 		JMenu file = new JMenu("File");
 		JCheckBoxMenuItem checkIt = new JCheckBoxMenuItem(checkboxAction);
 		checkboxModel = checkIt.getModel();
 		file.add(checkIt);
 		menuBar.add(file);
+		menuBar.add(counterMenu);
 		return menuBar;
 	}
 	
-	private static class CheckerInternalFrame extends JInternalFrame {
+	private void updateCounterMenuText() {
+		counterMenu.setText("Checking counter: " + counter);
+	}
+	
+	private static class DoubleCheckerInternalFrame extends JInternalFrame {
 		
 		private static final long serialVersionUID = 7764296274182376110L;
 
-		public CheckerInternalFrame(ButtonModel model, Action action, String checkItText) {
-			super("Internal", true, true, true, true);
+		public DoubleCheckerInternalFrame(ButtonModel model, Action action, String checkItText) {
+			super("Double checker", true, true, true, true);
 			setSize(320, 320);
 			setVisible(true);
 			
@@ -84,6 +106,43 @@ public class ExampleFrame extends JFrame {
 		}
 	}
 	
+	private static class SingleCheckerInternalFrame extends JInternalFrame {
+		
+		public SingleCheckerInternalFrame(ButtonModel model, String checkItText) {
+			super("Single checker", true, true, true, true);
+			setSize(320, 320);
+			setVisible(true);
+			
+			JCheckBoxMenuItem checkIt = new JCheckBoxMenuItem(checkItText);
+			checkIt.setModel(model);
+			
+			JMenuBar menuBar = new JMenuBar();
+			JMenu menu = new JMenu("File");
+			menu.add(checkIt);
+			menuBar.add(menu);
+			
+			setJMenuBar(menuBar);
+		}
+		
+	}
 	
+	private static class DifferentModelInternalFrame extends JInternalFrame {
+		
+		public DifferentModelInternalFrame(Action action) {
+			super("Same action, different model", true, true, true, true);
+			setSize(320, 320);
+			setVisible(true);
+			
+			JCheckBoxMenuItem checkIt = new JCheckBoxMenuItem(action);
+			
+			JMenuBar menuBar = new JMenuBar();
+			JMenu menu = new JMenu("File");
+			menu.add(checkIt);
+			menuBar.add(menu);
+			
+			setJMenuBar(menuBar);
+		}
+		
+	}
 	
 }
