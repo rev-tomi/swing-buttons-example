@@ -1,6 +1,7 @@
 package com.example.swingdemo;
 
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -11,6 +12,7 @@ import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
+import javax.swing.JToggleButton.ToggleButtonModel;
 
 public class ExampleFrame extends JFrame {
 
@@ -84,63 +86,85 @@ public class ExampleFrame extends JFrame {
 		counterMenu.setText("Checking counter: " + counter);
 	}
 	
-	private static class DoubleCheckerInternalFrame extends JInternalFrame {
+	private static abstract class CheckerInternalFrame extends JInternalFrame {
+		
+		private static final long serialVersionUID = 4030440002012563184L;
+		
+		private JCheckBoxMenuItem checker;
+		private String title;
+		
+		public CheckerInternalFrame(String title) {
+			super(title, true, true, true, true);
+			this.title = title;
+			setSize(320, 320);
+			setVisible(true);
+		}
+		
+		protected final void init(JCheckBoxMenuItem checker) {
+			this.checker = checker;
+			checker.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					updateTitle();
+				}
+			});
+			initMenuBar();
+			updateTitle();
+		}
+		
+		private void initMenuBar() {
+			JMenuBar menuBar = new JMenuBar();
+			JMenu menu = new JMenu("File");
+			menu.add(checker);
+			menuBar.add(menu);
+			setJMenuBar(menuBar);
+		}
+		
+		private void updateTitle() {
+			ToggleButtonModel model = (ToggleButtonModel) checker.getModel();
+			String actualTitle = title + " - " + (model.isSelected() ? "Checked" : "Unchecked"); 
+			setTitle(actualTitle);
+		}
+	}
+	
+	private static class DoubleCheckerInternalFrame extends CheckerInternalFrame {
 		
 		private static final long serialVersionUID = 7764296274182376110L;
 
 		public DoubleCheckerInternalFrame(ButtonModel model, Action action, String checkItText) {
-			super("Double checker", true, true, true, true);
-			setSize(320, 320);
-			setVisible(true);
+			super("Double checker");
 			
 			JCheckBoxMenuItem checkIt = new JCheckBoxMenuItem(checkItText);
 			checkIt.setAction(action);
 			checkIt.setModel(model);
 			
-			JMenuBar menuBar = new JMenuBar();
-			JMenu menu = new JMenu("File");
-			menu.add(checkIt);
-			menuBar.add(menu);
-			
-			setJMenuBar(menuBar);
+			init(checkIt);
 		}
 	}
 	
-	private static class SingleCheckerInternalFrame extends JInternalFrame {
+	private static class SingleCheckerInternalFrame extends CheckerInternalFrame {
 		
+		private static final long serialVersionUID = 8380545232445039770L;
+
 		public SingleCheckerInternalFrame(ButtonModel model, String checkItText) {
-			super("Single checker", true, true, true, true);
-			setSize(320, 320);
-			setVisible(true);
+			super("Single checker");
 			
 			JCheckBoxMenuItem checkIt = new JCheckBoxMenuItem(checkItText);
 			checkIt.setModel(model);
 			
-			JMenuBar menuBar = new JMenuBar();
-			JMenu menu = new JMenu("File");
-			menu.add(checkIt);
-			menuBar.add(menu);
-			
-			setJMenuBar(menuBar);
+			init(checkIt);
 		}
 		
 	}
 	
-	private static class DifferentModelInternalFrame extends JInternalFrame {
+	private static class DifferentModelInternalFrame extends CheckerInternalFrame {
 		
+		private static final long serialVersionUID = -5768769546908502695L;
+
 		public DifferentModelInternalFrame(Action action) {
-			super("Same action, different model", true, true, true, true);
-			setSize(320, 320);
-			setVisible(true);
+			super("Same action");
 			
 			JCheckBoxMenuItem checkIt = new JCheckBoxMenuItem(action);
-			
-			JMenuBar menuBar = new JMenuBar();
-			JMenu menu = new JMenu("File");
-			menu.add(checkIt);
-			menuBar.add(menu);
-			
-			setJMenuBar(menuBar);
+			init(checkIt);
 		}
 		
 	}
