@@ -80,7 +80,7 @@ public class ExampleFrame extends JFrame {
 	private JMenuBar getAndInitMenuBar() {
 		updateActionCounterMenuText();
 		JMenuBar menuBar = new JMenuBar();
-		JMenu file = new JMenu("File");
+		JMenu fileMenu = new JMenu("File");
 		checkBoxMenuItem = new JCheckBoxMenuItem(checkboxAction);
 		
 		checkBoxMenuItem.addActionListener(new ActionListener() {
@@ -93,8 +93,8 @@ public class ExampleFrame extends JFrame {
 		
 		checkboxModel = checkBoxMenuItem.getModel();
 		
-		file.add(checkBoxMenuItem);
-		menuBar.add(file);
+		fileMenu.add(checkBoxMenuItem);
+		menuBar.add(fileMenu);
 		
 		JMenu buttonActions = new JMenu("Button actions");
 		final JCheckBoxMenuItem actionEnabled = new JCheckBoxMenuItem("Action enabled");
