@@ -64,7 +64,11 @@ public class ExampleFrame extends JFrame {
 		
 		JInternalFrame differentModelChecker = new DifferentModelInternalFrame(checkboxAction);
 		desktop.add(differentModelChecker);
-		differentModelChecker.setLocation(160, 240);
+		differentModelChecker.setLocation(0, 240);
+		
+		JInternalFrame sameModelChecker = new SameModelInternalFrame(checkboxModel);
+		desktop.add(sameModelChecker);
+		sameModelChecker.setLocation(320, 240);
 		
 		updateTitle();
 		
@@ -230,6 +234,19 @@ public class ExampleFrame extends JFrame {
 			init(checkIt);
 		}
 		
+	}
+	
+	private static class SameModelInternalFrame extends CheckerInternalFrame {
+		
+		private static final long serialVersionUID = -7958841262971958339L;
+
+		public SameModelInternalFrame(ButtonModel model) {
+			super("Same model");
+			
+			JCheckBoxMenuItem checkIt = new JCheckBoxMenuItem();
+			checkIt.setModel(model);
+			init(checkIt);
+		}
 	}
 	
 }
