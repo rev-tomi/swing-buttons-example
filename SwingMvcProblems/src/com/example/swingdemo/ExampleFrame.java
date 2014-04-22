@@ -12,6 +12,7 @@ import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 
 import com.example.swingdemo.InternalFrameFactory.DifferentModelInternalFrame;
 import com.example.swingdemo.InternalFrameFactory.DoubleCheckerInternalFrame;
@@ -42,6 +43,13 @@ public class ExampleFrame extends JFrame {
 	private ButtonModel checkboxModel;
 	private JCheckBoxMenuItem checkBoxMenuItem;
 	
+	private JDesktopPane desktop;
+	
+	private JInternalFrame doubleChecker;
+	private JInternalFrame singleChecker;
+	private JInternalFrame differentModelChecker;
+	private JInternalFrame sameModelChecker;
+	
 	public ExampleFrame() {
 		// NoP. Call init() to initialize the GUI
 	}
@@ -52,29 +60,48 @@ public class ExampleFrame extends JFrame {
 		}
 		title = "Container frame";
 		setSize(800, 600);
-		JDesktopPane desktop = new JDesktopPane();
+		desktop = new JDesktopPane();
 		setContentPane(desktop);
 		setJMenuBar(getAndInitMenuBar());
-		
-		JInternalFrame doubleChecker = new DoubleCheckerInternalFrame(checkboxModel, checkboxAction, CHECK_IT);
-		desktop.add(doubleChecker);
-		doubleChecker.setLocation(0, 0);
-		
-		JInternalFrame singleChecker = new SingleCheckerInternalFrame(checkboxModel, CHECK_IT);
-		desktop.add(singleChecker);
-		singleChecker.setLocation(320, 0);
-		
-		JInternalFrame differentModelChecker = new DifferentModelInternalFrame(checkboxAction);
-		desktop.add(differentModelChecker);
-		differentModelChecker.setLocation(0, 240);
-		
-		JInternalFrame sameModelChecker = new SameModelInternalFrame(checkboxModel);
-		desktop.add(sameModelChecker);
-		sameModelChecker.setLocation(320, 240);
 		
 		updateTitle();
 		
 		initialized = true;
+	}
+	
+	private void showSameModelChecker() {
+		if (sameModelChecker == null) {
+			sameModelChecker = new SameModelInternalFrame(checkboxModel);
+			desktop.add(sameModelChecker);
+			sameModelChecker.setLocation(0, 0);
+		}
+		sameModelChecker.setVisible(true);
+	}
+	
+	private void showDifferentModelChecker() {
+		if (differentModelChecker == null) {
+			differentModelChecker = new DifferentModelInternalFrame(checkboxAction);
+			desktop.add(differentModelChecker);
+			differentModelChecker.setLocation(320, 0);
+		}
+		differentModelChecker.setVisible(true);
+	}
+	
+	private void showDoubleChecker() {
+		if (doubleChecker == null) {
+			doubleChecker = new DoubleCheckerInternalFrame(checkboxModel, checkboxAction, CHECK_IT);
+			desktop.add(doubleChecker);
+			differentModelChecker.setLocation(0, 240);
+		}
+		doubleChecker.setVisible(true);
+	}
+	
+	private void showSingleChecker() {
+		if (singleChecker == null) {
+			singleChecker = new SingleCheckerInternalFrame(checkboxModel, CHECK_IT);
+			desktop.add(singleChecker);
+			sameModelChecker.setLocation(320, 240);
+		}
 	}
 	
 	private void updateTitle() {
@@ -122,6 +149,22 @@ public class ExampleFrame extends JFrame {
 		buttonActions.add(modelEnabled);
 		
 		menuBar.add(buttonActions);
+		
+		JMenu checkerOpeners = new JMenu("Internal Frames");
+		checkerOpeners.add(new JMenuItem(new AbstractAction("Same button model") {
+			@Override public void actionPerformed(ActionEvent e) { showSameModelChecker(); }
+		}));
+		checkerOpeners.add(new JMenuItem(new AbstractAction("Different button model") {
+			@Override public void actionPerformed(ActionEvent e) { showDifferentModelChecker(); }
+		}));
+		checkerOpeners.add(new JMenuItem(new AbstractAction("Same action and model") {
+			@Override public void actionPerformed(ActionEvent e) { showDoubleChecker(); }
+		}));
+		checkerOpeners.add(new JMenuItem(new AbstractAction("Single checker") {
+			@Override public void actionPerformed(ActionEvent e) { showSingleChecker(); }
+		}));
+		
+		menuBar.add(checkerOpeners);
 		
 		menuBar.add(actionCounterMenu);
 		menuBar.add(listenerCounterMenu);

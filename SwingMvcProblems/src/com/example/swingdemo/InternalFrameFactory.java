@@ -45,7 +45,7 @@ public class InternalFrameFactory {
 			updateTitle();
 			
 			addInternalFrameListener(new InternalFrameAdapter() {
-				public void internalFrameClosed(InternalFrameEvent e) {
+				public void internalFrameClosing(InternalFrameEvent e) {
 					JCheckBoxMenuItem checker = CheckerInternalFrame.this.checker;
 					if (checker != null) {
 						checker.setAction(null);
